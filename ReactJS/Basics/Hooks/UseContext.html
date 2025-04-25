@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple useContext Example</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        font-family: Arial;
+        text-align: center;
+        margin-top: 50px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { createContext, useState, useContext } = React;
+
+      // 1. Create the context
+      const ColorContext = createContext();
+
+      // 2. Component A reads color from context
+      function ComponentA() {
+        const color = useContext(ColorContext);
+        return <h2 style={{ color }}>This is Component A</h2>;
+      }
+
+      // 3. Component B also uses the same color
+      function ComponentB() {
+        const color = useContext(ColorContext);
+        return <h3 style={{ color }}>This is Component B</h3>;
+      }
+
+      // 4. Component C also uses the same color
+      function ComponentC() {
+        const color = useContext(ColorContext);
+        return <h4 style={{ color }}>This is Component C</h4>;
+      }
+
+      // 5. App sets the color and provides it to both components
+      //here the color is the initiated with blue as default
+      function App() {
+        const [color, setColor] = useState("blue");
+
+        return (
+          //color has been passed as an argument for the value of colorcontext provider
+          //here color context is the global variable which has been reused in component A, Component B
+          <ColorContext.Provider value={color}>
+            <h1>Simple useContext Demo</h1>
+            <ComponentA />
+            <ComponentB />
+            <ComponentC />
+            <button onClick={() => setColor("green")}>Make Green</button>
+            <button onClick={() => setColor("red")}>Make Red</button>
+            <button onClick={() => setColor("yellow")}>Make Yellow</button>
+          </ColorContext.Provider>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>useEffect with Unmount Example</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 18px;
+        margin: 10px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      function Timer() {
+        const [count, setCount] = useState(0);
+
+        useEffect(() => {
+          console.log("Component mounted");
+
+          const interval = setInterval(() => {
+            setCount(prev => prev + 1);
+          }, 1000);
+
+          return () => {
+            console.log("Component will unmount (cleanup)");
+            clearInterval(interval);
+          };
+        }, []);
+
+        useEffect(() => {
+          console.log("Count changed to:", count);
+        }, [count]);
+
+        return (
+          <div>
+            <h1>useEffect Hook</h1>
+            <p>Seconds: {count}</p>
+          </div>
+        );
+      }
+
+      function App() {
+        const [showTimer, setShowTimer] = useState(true);
+
+        return (
+          <div>
+            <button onClick={() => setShowTimer(prev => !prev)}>
+              {showTimer ? "Unmount Timer" : "Mount Timer"}
+            </button>
+            {showTimer && <Timer />}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>

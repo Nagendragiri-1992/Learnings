@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Previous State Tracker</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      function Counter() {
+        const [count, setCount] = React.useState(0);
+        //Though UseRef has been declared as a seperate hook, there is no direct defenition available like 
+        //usestate, in this case usestate declared and defined directky in the button and useeffect declared as
+        //constructor and updated on state change like but for useref, a pointer has been created and the values are passed
+        const prevCountRef = React.useRef();
+
+        // 🔁 Runs every time `count` changes — tracks previous count
+        React.useEffect(() => {
+          console.log("useEffect - count updated:", count);
+          prevCountRef.current = count;
+        }, [count]);
+
+        // 🔄 Runs only once when component mounts
+        React.useEffect(() => {
+          console.log("useEffect - component mounted");
+          prevCountRef.current = 1;
+        }, []);
+
+        return (
+          <div style={{ textAlign: "center", marginTop: "50px" }}>
+            <h3>Current Count: {count}</h3>
+            <h4>Previous Count: {prevCountRef.current ?? "N/A"}</h4>
+            <button onClick={() => setCount(count + 1)}>Increase</button>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<Counter />);
+    </script>
+  </body>
+</html>

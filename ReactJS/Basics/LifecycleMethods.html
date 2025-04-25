@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>React useEffect Unmount Example</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function Example() {
+      const [count, setCount] = useState(0);
+
+      // Mount/unmount effect - this is equivalent to default constructor, 
+      // whenever the Example function is loaded from true the first line to 
+      // load will run and false is done, the next line unmount will run as a destructor
+      useEffect(() => {
+        console.log('Component mounted (like componentDidMount)');
+        return () => {
+          console.log('Component will unmount (cleanup)');
+        };
+      }, []);
+
+      // Update effect
+      useEffect(() => {
+        console.log('Component updated: count is', count);
+      }, [count]);
+
+      return (
+        <div>
+          <h2>React useEffect Example</h2>
+          <p>Clicked {count} times</p>
+          <button onClick={() => setCount(count + 1)}>Increment</button>
+        </div>
+      );
+    }
+
+    function App() {
+      const [show, setShow] = useState(true);
+
+      return (
+        <div>
+          <button onClick={() => setShow(!show)}>
+            {show ? 'Remove Component' : 'Mount Component'}
+          </button>
+          <hr />
+          {show && <Example />}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
